@@ -1,20 +1,25 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Login",
-  description: "Página de login",
+export const metadata = {
+  title: "Registrar",
 };
 
-export default function LoginPage() {
-  async function handleLogin(formData: FormData) {
+export default function RegisterPage() {
+  async function handleRegister(formData: FormData) {
     "use server";
 
+    const username = formData.get("username");
     const email = formData.get("email");
     const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
 
-    console.log("Email:", email, "Password:", password);
+    if (password !== confirmPassword) {
+      console.log("Senhas não coincidem");
+      return;
+    }
+
+    console.log({ username, email, password });
 
     redirect("/dashboard");
   }
@@ -23,12 +28,26 @@ export default function LoginPage() {
     <main className="grid min-h-screen grid-cols-2 bg-zinc-900 text-zinc-200">
       <div className="flex items-center justify-center">
         <form
-          action={handleLogin}
+          action={handleRegister}
           className="flex w-md flex-col gap-4 rounded-xl bg-zinc-800 p-8 shadow-lg"
         >
           <h2 className="mb-4 text-center text-3xl font-semibold text-cyan-400">
-            Realizar login
+            Criar conta
           </h2>
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="usernameField" className="text-sm text-zinc-300">
+              Nome de usuário
+            </label>
+            <input
+              id="usernameField"
+              name="username"
+              type="text"
+              placeholder="Seu nome de usuário"
+              className="rounded-md border border-cyan-500 bg-zinc-900 p-3 text-cyan-400 placeholder:text-zinc-500 focus:border-cyan-400 focus:outline-none"
+              required
+            />
+          </div>
 
           <div className="flex flex-col gap-2">
             <label htmlFor="emailField" className="text-sm text-zinc-300">
@@ -58,18 +77,35 @@ export default function LoginPage() {
             />
           </div>
 
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="confirmPasswordField"
+              className="text-sm text-zinc-300"
+            >
+              Confirmação de senha
+            </label>
+            <input
+              id="confirmPasswordField"
+              name="confirmPassword"
+              type="password"
+              placeholder="••••••••"
+              className="rounded-md border border-cyan-500 bg-zinc-900 p-3 text-cyan-400 placeholder:text-zinc-500 focus:border-cyan-400 focus:outline-none"
+              required
+            />
+          </div>
+
           <button
             type="submit"
             className="mt-4 w-full rounded-md bg-cyan-600 py-3 font-medium text-zinc-200 transition-colors hover:bg-cyan-500"
           >
-            Entrar
+            Registrar
           </button>
 
           <div className="w-full text-center text-zinc-300">
-            Ainda não tem conta? Cadastre-se{" "}
+            Já tem conta? Entre{" "}
             <Link
               className="text-cyan-600 hover:text-cyan-500"
-              href={"/auth/register"}
+              href={"/auth/login"}
             >
               aqui
             </Link>
