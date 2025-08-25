@@ -1,23 +1,30 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Login",
-  description: "Página de login",
-};
+import { InlineBannerMessage } from "@/ui/frontend/components/base/InlineBannerMessage";
+import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function LoginPage() {
+  useDocumentTitle("Login");
+  const [error, setError] = useState<string>("");
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+  }
+
   return (
     <main className="grid min-h-screen grid-cols-2 bg-zinc-900 text-zinc-200">
       <div className="flex items-center justify-center">
         <form
-          method="post"
-          action="/api/auth/login"
+          onSubmit={handleSubmit}
           className="flex w-md flex-col gap-4 rounded-xl bg-zinc-800 p-8 shadow-lg"
         >
           <h2 className="mb-4 text-center text-3xl font-semibold text-cyan-400">
             Realizar login
           </h2>
+
+          {error && <InlineBannerMessage type="error" text={error} />}
 
           <div className="flex flex-col gap-2">
             <label htmlFor="emailField" className="text-sm text-zinc-300">

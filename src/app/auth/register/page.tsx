@@ -1,20 +1,19 @@
 "use client";
 
+import { InlineBannerMessage } from "@/ui/frontend/components/base/InlineBannerMessage";
+import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  useDocumentTitle("Registrar-se");
   const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    document.title = "Registrar";
-  }, []);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setError("");
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(event.currentTarget);
 
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -41,11 +40,7 @@ export default function RegisterPage() {
             Criar conta
           </h2>
 
-          {error && (
-            <div className="rounded-md bg-red-700/50 p-2 text-center text-red-200">
-              {error}
-            </div>
-          )}
+          {error && <InlineBannerMessage type="error" text={error} />}
 
           <div className="flex flex-col gap-2">
             <label htmlFor="usernameField" className="text-sm text-zinc-300">
