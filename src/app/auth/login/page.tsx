@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -8,22 +7,12 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
-  async function handleLogin(formData: FormData) {
-    "use server";
-
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    console.log("Email:", email, "Password:", password);
-
-    redirect("/dashboard");
-  }
-
   return (
     <main className="grid min-h-screen grid-cols-2 bg-zinc-900 text-zinc-200">
       <div className="flex items-center justify-center">
         <form
-          action={handleLogin}
+          method="post"
+          action="/api/auth/login"
           className="flex w-md flex-col gap-4 rounded-xl bg-zinc-800 p-8 shadow-lg"
         >
           <h2 className="mb-4 text-center text-3xl font-semibold text-cyan-400">

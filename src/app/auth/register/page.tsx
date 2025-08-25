@@ -1,39 +1,51 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
+"use client";
 
-export const metadata = {
-  title: "Registrar",
-};
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function RegisterPage() {
-  async function handleRegister(formData: FormData) {
-    "use server";
+  const [error, setError] = useState<string>("");
 
-    const username = formData.get("username");
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const confirmPassword = formData.get("confirmPassword");
+  useEffect(() => {
+    document.title = "Registrar";
+  }, []);
 
-    if (password !== confirmPassword) {
-      console.log("Senhas não coincidem");
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+
+    const formData = new FormData(e.currentTarget);
+
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error || "Erro no registro");
       return;
     }
 
-    console.log({ username, email, password });
-
-    redirect("/dashboard");
+    window.location.href = "/auth/login";
   }
 
   return (
     <main className="grid min-h-screen grid-cols-2 bg-zinc-900 text-zinc-200">
       <div className="flex items-center justify-center">
         <form
-          action={handleRegister}
+          onSubmit={handleSubmit}
           className="flex w-md flex-col gap-4 rounded-xl bg-zinc-800 p-8 shadow-lg"
         >
           <h2 className="mb-4 text-center text-3xl font-semibold text-cyan-400">
             Criar conta
           </h2>
+
+          {error && (
+            <div className="rounded-md bg-red-700/50 p-2 text-center text-red-200">
+              {error}
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             <label htmlFor="usernameField" className="text-sm text-zinc-300">
