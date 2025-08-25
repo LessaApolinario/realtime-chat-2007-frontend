@@ -1,11 +1,12 @@
 "use client";
 
+import { ChatArea } from "@/ui/frontend/components/chat/ChatArea";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const router = useRouter();
-  const { data: session, status } = useSession({
+  const { status } = useSession({
     required: true,
     onUnauthenticated() {
       router.push("/auth/login");
@@ -22,7 +23,7 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-zinc-900 text-cyan-400">
-      <p>Bem-vindo {session?.user?.name}</p>
+      <ChatArea />
     </main>
   );
 }

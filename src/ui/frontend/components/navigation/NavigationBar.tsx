@@ -1,7 +1,6 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import { useMemo } from "react";
 
 export function NavigationBar() {
   const { data: session, status } = useSession();
@@ -14,13 +13,9 @@ export function NavigationBar() {
     return <></>;
   }
 
-  const username = useMemo<string>(() => {
-    return session?.user?.name ?? "";
-  }, []);
-
   return (
     <header className="flex w-full items-center justify-between bg-zinc-800 p-4">
-      <h2 className="text-cyan-600">Olá, {username}</h2>
+      <h2 className="text-cyan-600">Olá, {session?.user?.name}</h2>
 
       <nav>Links</nav>
 
