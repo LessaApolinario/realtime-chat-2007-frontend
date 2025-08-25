@@ -24,11 +24,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const userAlreadyExists = await prisma.user.findUnique({
+    const foundUser = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (userAlreadyExists) {
+    if (foundUser) {
       return NextResponse.json(
         { error: "Já existe um usuário com esse email." },
         { status: 409 },

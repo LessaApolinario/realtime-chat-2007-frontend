@@ -3,11 +3,13 @@
 import { InlineBannerMessage } from "@/ui/frontend/components/base/InlineBannerMessage";
 import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function RegisterPage() {
   useDocumentTitle("Registrar-se");
   const [error, setError] = useState<string>("");
+  const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -15,18 +17,18 @@ export default function RegisterPage() {
 
     const formData = new FormData(event.currentTarget);
 
-    const res = await fetch("/api/auth/register", {
+    const response = await fetch("/api/auth/register", {
       method: "POST",
       body: formData,
     });
 
-    if (!res.ok) {
-      const data = await res.json();
+    if (!response.ok) {
+      const data = await response.json();
       setError(data.error || "Erro no registro");
       return;
     }
 
-    window.location.href = "/auth/login";
+    router.push("/auth/login");
   }
 
   return (

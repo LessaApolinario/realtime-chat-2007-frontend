@@ -2,15 +2,36 @@
 
 import { InlineBannerMessage } from "@/ui/frontend/components/base/InlineBannerMessage";
 import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
   useDocumentTitle("Login");
   const [error, setError] = useState<string>("");
+  const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError("");
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError(result.error);
+      return;
+    }
+
+    router.push("/dashboard");
   }
 
   return (
