@@ -1,15 +1,22 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/login");
+    },
+  });
 
   if (status === "loading") {
     return <p>Carregando...</p>;
   }
 
-  if (status === "unauthenticated") {
+  if (status !== "authenticated") {
     return <p>Você não está logado</p>;
   }
 
