@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
@@ -22,7 +22,15 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-zinc-900 text-cyan-400">
-      <p>Bem-vindo {session?.user?.name}!</p>
+      <p>Bem-vindo {session?.user?.name}</p>
+
+      <button
+        type="button"
+        onClick={() => signOut()}
+        className="w-40 cursor-pointer rounded-md bg-cyan-600 py-3 font-medium text-zinc-200 transition-colors hover:bg-cyan-500"
+      >
+        Sair
+      </button>
     </main>
   );
 }
