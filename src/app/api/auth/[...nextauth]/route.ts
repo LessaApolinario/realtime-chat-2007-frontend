@@ -36,8 +36,9 @@ const handler = NextAuth({
           }
 
           return {
-            id: "",
+            id: foundUser.id,
             name: foundUser.username,
+            email: foundUser.email,
           };
         } catch (error) {
           throw new Error((error as any).message || "Falha na autenticação.");
@@ -59,20 +60,21 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.id = user.id;
         token.name = user.name;
         token.email = user.email;
       }
-
       return token;
     },
+
     async session({ session, token }) {
       if (token) {
         session.user = {
+          id: token.id as string,
           name: token.name as string,
           email: token.email as string,
         };
       }
-
       return session;
     },
   },

@@ -22,7 +22,7 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-900 text-cyan-400">
+    <main className="min-h-screen bg-zinc-900 p-16 text-cyan-400">
       <ChatArea />
     </main>
   );

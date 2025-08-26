@@ -3,10 +3,14 @@
 import type { FetchChartRoomsResponse } from "@/@types/http/response/auth";
 import type { ChatRoom } from "@/core/domain/models/ChatRoom";
 import { useEffect, useState } from "react";
+import { Modal } from "../base/Modal";
 import { ChatRoomCard } from "./ChatRoomCard";
+import { CreateChatRoomForm } from "./CreateChatRoomModal";
 
 export function ChatArea() {
   const [rooms, setChatRooms] = useState<ChatRoom[]>([]);
+  const [isCreateChatRoomModalVisible, setIsCreateChatRoomModalVisible] =
+    useState(false);
 
   useEffect(() => {
     async function fetchChatRooms() {
@@ -24,15 +28,21 @@ export function ChatArea() {
     fetchChatRooms();
   }, []);
 
-  function handleOpenCreateChatRoomModal() {}
+  function handleOpenCreateChatRoomModal() {
+    setIsCreateChatRoomModalVisible(true);
+  }
+
+  function handleCloseCreateChatRoomModal() {
+    setIsCreateChatRoomModalVisible(false);
+  }
 
   return (
-    <section>
+    <section className="w-full">
       <div className="mb-5">
         <button
           type="button"
           onClick={handleOpenCreateChatRoomModal}
-          className="cursor-pointer rounded-full bg-zinc-800 p-2 text-zinc-200"
+          className="cursor-pointer rounded-full bg-cyan-600 px-3 py-1 text-lg text-zinc-950 hover:bg-cyan-500"
         >
           +
         </button>
@@ -43,6 +53,15 @@ export function ChatArea() {
           return <ChatRoomCard key={room.id} data={room} />;
         })}
       </ul>
+
+      {isCreateChatRoomModalVisible && (
+        <Modal
+          isOpen={isCreateChatRoomModalVisible}
+          onClose={handleCloseCreateChatRoomModal}
+        >
+          <CreateChatRoomForm onClose={handleCloseCreateChatRoomModal} />
+        </Modal>
+      )}
     </section>
   );
 }
