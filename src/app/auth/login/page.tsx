@@ -1,16 +1,41 @@
 "use client";
 
 import { InlineBannerMessage } from "@/ui/frontend/components/base/InlineBannerMessage";
+import { PageLoading } from "@/ui/frontend/components/base/PageLoading";
+import { Spinner } from "@/ui/frontend/components/base/Spinner";
 import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   useDocumentTitle("Login");
+  const { status } = useSession();
   const [error, setError] = useState<string>("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/dashboard");
+    }
+  }, [status]);
+
+  if (status === "loading") {
+    return (
+      <PageLoading>
+        <Spinner className="h-20 w-20 border-6 border-cyan-600" />
+      </PageLoading>
+    );
+  }
+
+  if (status === "authenticated") {
+    return (
+      <PageLoading>
+        <Spinner className="h-20 w-20 border-6 border-cyan-600" />
+      </PageLoading>
+    );
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,8 +55,6 @@ export default function LoginPage() {
       setError(result.error);
       return;
     }
-
-    router.push("/dashboard");
   }
 
   return (

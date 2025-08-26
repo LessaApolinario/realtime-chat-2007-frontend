@@ -1,5 +1,7 @@
 "use client";
 
+import { PageLoading } from "@/ui/frontend/components/base/PageLoading";
+import { Spinner } from "@/ui/frontend/components/base/Spinner";
 import { ChatArea } from "@/ui/frontend/components/chat/ChatArea";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -14,7 +16,11 @@ export default function Dashboard() {
   });
 
   if (status === "loading") {
-    return <p>Carregando...</p>;
+    return (
+      <PageLoading>
+        <Spinner className="h-20 w-20 border-6 border-cyan-600" />
+      </PageLoading>
+    );
   }
 
   if (status !== "authenticated") {
