@@ -7,4 +7,6 @@ export interface ChatRoom {
   type: ChatRoomType;
   permission: ChatPermission;
   user_id: string;
+  created_at: string;
+  updated_at: string;
 }
