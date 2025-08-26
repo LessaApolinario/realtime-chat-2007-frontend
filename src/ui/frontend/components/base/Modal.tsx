@@ -27,7 +27,7 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
       <div className="relative w-full max-w-md rounded-xl bg-zinc-800 p-8 text-zinc-200 shadow-lg">
         <header className="flex w-full items-center justify-end">
           <button
-            className="rounded-full bg-cyan-600 px-3 py-1 text-zinc-200 transition-colors hover:bg-cyan-500"
+            className="cursor-pointer rounded-full bg-cyan-600 px-3 py-1 text-zinc-200 transition-colors hover:bg-cyan-700"
             type="button"
             onClick={onClose}
           >
