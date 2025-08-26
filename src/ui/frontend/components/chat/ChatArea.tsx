@@ -5,7 +5,7 @@ import type { ChatRoom } from "@/core/domain/models/ChatRoom";
 import { useEffect, useState } from "react";
 import { Modal } from "../base/Modal";
 import { ChatRoomCard } from "./ChatRoomCard";
-import { CreateChatRoomForm } from "./CreateChatRoomModal";
+import { CreateChatRoomForm } from "./CreateChatRoomForm";
 
 export function ChatArea() {
   const [rooms, setChatRooms] = useState<ChatRoom[]>([]);
@@ -48,9 +48,13 @@ export function ChatArea() {
         </button>
       </div>
 
-      <ul className="lg:gid-cols-4 xl:grid-col-6 grid list-none grid-cols-1 sm:grid-cols-1 md:grid-cols-4 2xl:grid-cols-8">
+      <ul className="grid w-full grid-cols-1 items-stretch gap-6 p-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
         {rooms.map((room) => {
-          return <ChatRoomCard key={room.id} data={room} />;
+          return (
+            <li key={room.id} className="w-full">
+              <ChatRoomCard data={room} />
+            </li>
+          );
         })}
       </ul>
 

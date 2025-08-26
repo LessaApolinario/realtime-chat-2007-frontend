@@ -2,19 +2,17 @@
 
 import { ChatPermission } from "@/@types/enum/chat/ChatPermission";
 import { ChatRoomType } from "@/@types/enum/chat/ChatRoomType";
+import type { CreateChatRoomRequest } from "@/@types/http/request/auth";
+import type { CreateChatRoomResponse } from "@/@types/http/response/auth";
 import * as BaseSelect from "@/ui/frontend/components/radix/select";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { InlineBannerMessage } from "../base/InlineBannerMessage";
-import type { CreateChatRoomResponse } from "@/@types/http/response/auth";
-import type { CreateChatRoomRequest } from "@/@types/http/request/auth";
 
 interface CreateChatRoomFormProps {
   onClose: () => void;
 }
 
 export function CreateChatRoomForm({ onClose }: CreateChatRoomFormProps) {
-  const { data: session } = useSession();
   const [error, setError] = useState<string>("");
   const [name, setName] = useState("");
   const [permission, setPermission] = useState<ChatPermission>(
@@ -156,7 +154,7 @@ export function CreateChatRoomForm({ onClose }: CreateChatRoomFormProps) {
 
       <button
         type="submit"
-        className="mt-4 h-12 w-full rounded-md bg-cyan-600 font-medium text-zinc-200 transition-colors hover:bg-cyan-500"
+        className="mt-4 h-12 w-full cursor-pointer rounded-md bg-cyan-600 font-medium text-zinc-800 transition-colors hover:bg-cyan-700"
       >
         Criar
       </button>
