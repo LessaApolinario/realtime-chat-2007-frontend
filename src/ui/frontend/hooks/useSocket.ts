@@ -7,7 +7,7 @@ export function useSocket(baseUrl?: string) {
   const [socket, setSocket] = useState<Socket>();
 
   function createWebSocketConnection(token: string) {
-    const newSocket = io(baseUrl, { auth: { token } });
+    const newSocket = io(baseUrl);
     setSocket(newSocket);
   }
 

@@ -1,6 +1,4 @@
-import type { FetchChartRoomsResponse } from "@/@types/http/response/auth";
-import { createUserSignedToken } from "@/core/utils/session";
-import jwt from "jsonwebtoken";
+import { prisma } from "@/lib/prisma";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -15,32 +13,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
 
-    const signedToken = createUserSignedToken({
-      name: token.name ?? "",
-      email: token.email ?? "",
-    });
-
-    const response = await fetch(
-      `${process.env.REALTIME_CHAT_API_URL}/api/chat-rooms`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${signedToken}`,
-        },
-      },
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return NextResponse.json(
-        { error: errorData },
-        { status: response.status },
-      );
-    }
-
-    const data: FetchChartRoomsResponse = await response.json();
-
-    return NextResponse.json({ chatRooms: data.chatRooms }, { status: 200 });
+    const chatRooms = await prisma.chatRoom.findMany();
+    return NextResponse.json({ chatRooms }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

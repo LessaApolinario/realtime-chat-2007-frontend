@@ -14,13 +14,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  admin
+  guest
+}
+
+enum ChatPermission {
+  all
+  admin
+  guest
+}
+
+enum ChatRoomType {
+  public
+  private
+}
+
 model User {
   id            String    @id @default(uuid())
   username      String
   email         String    @unique
   password_hash String
+  role          Role      @default(guest)
   created_at    DateTime  @default(now())
   updated_at    DateTime? @updatedAt
 
+  chatRooms ChatRoom[]
+
   @@map("users")
+}
+
+model ChatRoom {
+  id         String         @id @default(uuid())
+  name       String
+  type       ChatRoomType   @default(public)
+  permission ChatPermission @default(all)
+  password   String         @default("")
+  created_at DateTime       @default(now())
+  updated_at DateTime?      @updatedAt
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@map("chat_rooms")
 }
