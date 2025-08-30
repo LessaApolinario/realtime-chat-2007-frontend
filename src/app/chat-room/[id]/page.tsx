@@ -49,5 +49,12 @@ export default function ChatRoomPage() {
     };
   }, [socket]);
 
-  return <div>Chat da sala {roomId}</div>;
+  return (
+    <main className="min-h-screen bg-zinc-900 p-16 text-cyan-400">
+      <h1 className="text-xl">
+        <strong>Chat da sala:</strong>{" "}
+        <span className="font-normal text-zinc-300">{roomId}</span>
+      </h1>
+    </main>
+  );
 }
