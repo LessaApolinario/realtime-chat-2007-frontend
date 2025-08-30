@@ -13,7 +13,7 @@ export default function ChatRoomPage() {
 
   const { token, updateUserToken } = useUserToken();
   const { createWebSocketConnection, emitEvent, socket } = useSocket(
-    process.env.REALTIME_CHAT_WEB_SOCKET_URL,
+    process.env.NEXT_PUBLIC_REALTIME_CHAT_WEB_SOCKET_URL,
   );
 
   useEffect(() => {
