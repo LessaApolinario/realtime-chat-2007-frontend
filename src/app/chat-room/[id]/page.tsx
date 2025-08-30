@@ -12,7 +12,7 @@ export default function ChatRoomPage() {
   const roomId = params.id;
 
   const { token, updateUserToken } = useUserToken();
-  const { createWebSocketConnection, emitEvent, onEvent, socket } = useSocket(
+  const { createWebSocketConnection, emitEvent, socket } = useSocket(
     process.env.REALTIME_CHAT_WEB_SOCKET_URL,
   );
 
@@ -26,9 +26,9 @@ export default function ChatRoomPage() {
   }, [session]);
 
   useEffect(() => {
-    if (!token) return;
-
-    createWebSocketConnection(token);
+    if (token) {
+      createWebSocketConnection(token);
+    }
 
     return () => {
       socket?.disconnect();
@@ -45,7 +45,7 @@ export default function ChatRoomPage() {
     // });
 
     return () => {
-      emitEvent("leaveChatRoom", { roomId });
+      // emitEvent("leaveChatRoom", { roomId });
     };
   }, [socket]);
 
