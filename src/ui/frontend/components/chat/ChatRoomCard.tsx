@@ -3,31 +3,35 @@ import type { ChatRoomType } from "@/@types/enum/chat/ChatRoomType";
 import type { ChatRoom } from "@/core/domain/models/ChatRoom";
 
 interface ChatCardProps {
-  data: ChatRoom;
+  chatRoom: ChatRoom;
+  onEnterChatRoom: (roomId: string) => void | Promise<void>;
 }
 
-export function ChatRoomCard({ data }: ChatCardProps) {
+export function ChatRoomCard({ chatRoom, onEnterChatRoom }: ChatCardProps) {
   const mappedPermissionsTexts: Record<ChatPermission, string> = {
     admin: "Admins",
     guest: "Usuários comuns",
     all: "Todos",
   };
-  const permissionText = mappedPermissionsTexts[data.permission];
+  const permissionText = mappedPermissionsTexts[chatRoom.permission];
 
   const mappedChatRoomTypes: Record<ChatRoomType, string> = {
     public: "Pública",
     private: "Privada",
   };
-  const chatRoomTypeText = mappedChatRoomTypes[data.type];
+  const chatRoomTypeText = mappedChatRoomTypes[chatRoom.type];
 
-  const isPublicChatRoom = data.type === "public";
-  const isAvailableForEverybody = data.permission === "all";
+  const isPublicChatRoom = chatRoom.type === "public";
+  const isAvailableForEverybody = chatRoom.permission === "all";
 
-  const formattedDate = new Date(data.created_at).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  const formattedDate = new Date(chatRoom.created_at).toLocaleDateString(
+    "pt-BR",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    },
+  );
 
   return (
     <div className="overflow-hidden rounded-xl bg-zinc-800">
@@ -36,7 +40,7 @@ export function ChatRoomCard({ data }: ChatCardProps) {
       </div>
 
       <div className="p-5">
-        <h2 className="mb-1 text-xl font-bold text-white">{data.name}</h2>
+        <h2 className="mb-1 text-xl font-bold text-white">{chatRoom.name}</h2>
         <p className="mb-3 text-sm text-zinc-400">Criada em {formattedDate}</p>
 
         <div className="mb-2 flex items-center gap-2">
@@ -67,6 +71,7 @@ export function ChatRoomCard({ data }: ChatCardProps) {
 
         <button
           type="button"
+          onClick={() => onEnterChatRoom(chatRoom.id)}
           className="h-12 w-full cursor-pointer rounded-md bg-cyan-600 font-medium text-zinc-800 transition-colors hover:bg-cyan-700"
         >
           Entrar

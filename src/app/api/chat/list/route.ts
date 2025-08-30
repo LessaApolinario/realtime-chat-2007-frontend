@@ -1,4 +1,5 @@
 import type { FetchChartRoomsResponse } from "@/@types/http/response/auth";
+import { createUserSignedToken } from "@/core/utils/session";
 import jwt from "jsonwebtoken";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
@@ -14,11 +15,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
 
-    const signedToken = jwt.sign(
-      { name: token.name, email: token.email },
-      process.env.NEXTAUTH_SECRET!,
-      { expiresIn: "1h" },
-    );
+    const signedToken = createUserSignedToken({
+      name: token.name ?? "",
+      email: token.email ?? "",
+    });
 
     const response = await fetch(
       `${process.env.REALTIME_CHAT_API_URL}/api/chat-rooms`,
@@ -39,8 +39,6 @@ export async function GET(request: NextRequest) {
     }
 
     const data: FetchChartRoomsResponse = await response.json();
-
-    console.log({ data, status: response.status });
 
     return NextResponse.json({ chatRooms: data.chatRooms }, { status: 200 });
   } catch (error) {

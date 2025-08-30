@@ -2,15 +2,45 @@
 
 import type { FetchChartRoomsResponse } from "@/@types/http/response/auth";
 import type { ChatRoom } from "@/core/domain/models/ChatRoom";
-import { useEffect, useState } from "react";
+import { createUserSignedToken } from "@/core/utils/session";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useSocket } from "../../hooks/useSocket";
 import { Modal } from "../base/Modal";
 import { ChatRoomCard } from "./ChatRoomCard";
 import { CreateChatRoomForm } from "./CreateChatRoomForm";
+import { useUserToken } from "../../hooks/useUserToken";
 
 export function ChatArea() {
+  const { data: session } = useSession();
+  const {
+    socket: chatRoomWebSocket,
+    createWebSocketConnection,
+    emitEvent,
+  } = useSocket(process.env.REALTIME_CHAT_WEB_SOCKET_URL);
+  const { token, updateUserToken } = useUserToken();
+  const router = useRouter();
   const [rooms, setChatRooms] = useState<ChatRoom[]>([]);
   const [isCreateChatRoomModalVisible, setIsCreateChatRoomModalVisible] =
     useState(false);
+
+  useEffect(() => {
+    if (session?.user) {
+      updateUserToken({
+        name: session.user.name ?? "",
+        email: session.user.email ?? "",
+      });
+    }
+  }, [session]);
+
+  useEffect(() => {
+    createWebSocketConnection(token);
+
+    return () => {
+      chatRoomWebSocket?.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchChatRooms() {
@@ -36,6 +66,11 @@ export function ChatArea() {
     setIsCreateChatRoomModalVisible(false);
   }
 
+  function handleEnterChatRoom(roomId: string) {
+    emitEvent("joinChatRoom", { roomId });
+    router.push(`/chat/${roomId}`);
+  }
+
   return (
     <section className="w-full">
       <div className="mb-5">
@@ -52,7 +87,10 @@ export function ChatArea() {
         {rooms.map((room) => {
           return (
             <li key={room.id} className="w-full">
-              <ChatRoomCard data={room} />
+              <ChatRoomCard
+                chatRoom={room}
+                onEnterChatRoom={handleEnterChatRoom}
+              />
             </li>
           );
         })}

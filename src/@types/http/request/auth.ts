@@ -7,3 +7,8 @@ export interface CreateChatRoomRequest {
   permission?: ChatPermission;
   password?: string;
 }
+
+export interface CreateUserSignedTokenRequest {
+  name: string;
+  email: string;
+}

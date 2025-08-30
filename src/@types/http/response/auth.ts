@@ -8,3 +8,7 @@ export interface CreateChatRoomResponse {
   chatRoom: ChatRoom;
   error: Error;
 }
+
+export interface CreateUserSignedTokenResponse {
+  token: string;
+}
