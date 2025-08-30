@@ -1,10 +1,8 @@
 import type { CreateChatRoomRequest } from "@/@types/http/request/auth";
-import type { CreateChatRoomResponse } from "@/@types/http/response/auth";
-import jwt from "jsonwebtoken";
+import { ChatPermission, ChatRoomType } from "@/generated/prisma";
+import { prisma } from "@/lib/prisma";
 import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { ChatPermission, ChatRoomType } from "@/generated/prisma";
 
 export async function POST(request: NextRequest) {
   try {
