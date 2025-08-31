@@ -1,12 +1,14 @@
 "use client";
 
+import type { ChatMessage } from "@/@types/ChatMessage";
 import type { Participant } from "@/@types/Participant";
+import { ChatMessages } from "@/ui/frontend/components/chat/ChatMessages";
 import { ParticipantsSidebar } from "@/ui/frontend/components/chat/ParticipantsSidebar";
 import { useSocket } from "@/ui/frontend/hooks/useSocket";
 import { useUserToken } from "@/ui/frontend/hooks/useUserToken";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ChatRoomPage() {
   const params = useParams<{ id: string }>();
@@ -19,6 +21,7 @@ export default function ChatRoomPage() {
   );
 
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
     if (session?.user) {
@@ -50,24 +53,41 @@ export default function ChatRoomPage() {
       setParticipants(roomParticipants);
     });
 
-    // onEvent("room:joined", (data) => {
-    //   console.log("Entrou na sala:", data);
-    // });
+    onEvent("message", (message: ChatMessage) => {
+      console.log("Message from socket: ", message);
+      setMessages((previousMessages) => [...previousMessages, message]);
+    });
 
     return () => {
       emitEvent("leaveChatRoom", { roomId });
     };
   }, [socket]);
 
+  const formattedMessages = useMemo<ChatMessage[]>(() => {
+    return messages.map((currentMessage) => {
+      return {
+        ...currentMessage,
+        sentByMe: socket?.id === currentMessage.senderId,
+      };
+    });
+  }, []);
+
+  function handleSendMessage(text: string) {
+    emitEvent("message", { roomId, text });
+  }
+
   return (
-    <main className="min-h-screen bg-zinc-900 p-16 text-cyan-400">
+    <main className="h-[calc(100vh_-_5rem)] bg-zinc-900 p-16 text-cyan-400">
       <h1 className="text-xl">
         <strong>Chat da sala:</strong>{" "}
         <span className="font-normal text-zinc-300">{roomId}</span>
       </h1>
 
-      <section className="grid w-full grid-cols-[2fr_1fr]">
-        <div>Messages</div>
+      <section className="grid h-[calc(100%_-_3.75rem)] w-full grid-cols-[2fr_1fr] gap-8">
+        <ChatMessages
+          messages={formattedMessages}
+          onSendMessage={handleSendMessage}
+        />
         <ParticipantsSidebar participants={participants} />
       </section>
     </main>
