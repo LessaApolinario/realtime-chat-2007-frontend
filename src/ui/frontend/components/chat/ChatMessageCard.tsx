@@ -8,9 +8,11 @@ interface ChatMessageCardProps {
 }
 
 export function ChatMessageCard({ message }: ChatMessageCardProps) {
-  const orientationClass = message.sentByMe ? "self-end" : "";
-  const textOrientationClass = message.sentByMe ? "text-right" : "";
-  const dateOrientationClass = message.sentByMe ? "justify-end" : "";
+  const orientationClass = message.sentByMe ? "self-end" : "self-start";
+  const textOrientationClass = message.sentByMe ? "text-right" : "text-left";
+  const dateOrientationClass = message.sentByMe
+    ? "justify-end"
+    : "justify-start";
 
   return (
     <div
