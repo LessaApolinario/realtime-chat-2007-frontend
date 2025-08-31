@@ -54,7 +54,6 @@ export default function ChatRoomPage() {
     });
 
     onEvent("message", (message: ChatMessage) => {
-      console.log("Message from socket: ", message);
       setMessages((previousMessages) => [...previousMessages, message]);
     });
 
@@ -70,7 +69,7 @@ export default function ChatRoomPage() {
         sentByMe: socket?.id === currentMessage.senderId,
       };
     });
-  }, []);
+  }, [messages]);
 
   function handleSendMessage(text: string) {
     emitEvent("message", { roomId, text });
