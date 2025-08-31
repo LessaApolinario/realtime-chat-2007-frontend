@@ -4,5 +4,7 @@ services:
     container_name: realtime-chat-2007-database
     ports:
       - '${DB_HOST_PORT-6000}:5432'
+    volumes:
+      - ./pg_data:${POSTGRESQL_VOLUME_DIR}
     env_file:
       - .env
