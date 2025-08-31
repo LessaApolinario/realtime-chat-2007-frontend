@@ -22,11 +22,17 @@ export function ChatMessages({ messages, onSendMessage }: ChatMessageProps) {
 
   return (
     <section className="flex h-full flex-col rounded-xl bg-zinc-800">
-      <div className="flex h-[calc(100%_-_6.5rem)] w-full flex-col gap-3 overflow-y-scroll rounded-xl bg-zinc-700 p-4 text-white">
-        {messages.map((message) => (
-          <ChatMessageCard message={message} key={message.id} />
-        ))}
-      </div>
+      {messages.length ? (
+        <div className="flex h-[calc(100%_-_4.5rem)] w-full flex-col overflow-y-scroll rounded-xl bg-zinc-700 p-4 text-white">
+          {messages.map((message) => (
+            <ChatMessageCard message={message} key={message.id} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex h-[calc(100%_-_4.5rem)] items-center justify-center">
+          <div className="txt-cyan-500 text-lg">Sem mensagens nesta sala</div>
+        </div>
+      )}
 
       <div className="flex h-[4.5rem] w-full items-center justify-center gap-2 p-2">
         <input
