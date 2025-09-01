@@ -21,25 +21,24 @@ export function ChatMessages({ messages, onSendMessage }: ChatMessageProps) {
   }
 
   function handleSendMessageOnPressEnter(event: KeyboardEvent) {
-    const isEnterKey = event.key === "Enter";
-    if (isEnterKey) {
+    if (event.key === "Enter") {
       handleSendMessage();
     }
   }
 
   return (
-    <section className="flex h-full flex-col rounded-xl bg-zinc-800">
-      {messages.length ? (
-        <div className="flex h-[calc(100%_-_4.5rem)] w-full flex-col gap-2 overflow-y-auto rounded-xl bg-zinc-700 p-4 text-white">
-          {messages.map((message) => (
+    <section className="flex min-h-0 flex-col rounded-xl bg-zinc-800">
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto rounded-xl bg-zinc-700 p-4 text-white">
+        {messages.length ? (
+          messages.map((message) => (
             <ChatMessageCard message={message} key={message.id} />
-          ))}
-        </div>
-      ) : (
-        <div className="flex h-[calc(100%_-_4.5rem)] items-center justify-center rounded-xl bg-zinc-700 text-lg text-cyan-500">
-          Sem mensagens nesta sala
-        </div>
-      )}
+          ))
+        ) : (
+          <div className="flex flex-1 items-center justify-center text-lg text-cyan-500">
+            Sem mensagens nesta sala
+          </div>
+        )}
+      </div>
 
       <div className="flex h-[4.5rem] w-full items-center justify-center gap-2 p-2">
         <input

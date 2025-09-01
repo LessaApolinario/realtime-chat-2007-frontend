@@ -25,7 +25,7 @@ export default function ChatRoomPage() {
         <span className="font-normal text-zinc-300">{params.id}</span>
       </h1>
 
-      <section className="grid h-[calc(100%_-_3.75rem)] w-full grid-cols-[2fr_1fr] gap-8">
+      <section className="grid h-[calc(100%_-_1.75rem)] min-h-0 w-full grid-cols-[2fr_1fr] gap-8">
         <ChatMessages
           messages={formattedMessages}
           onSendMessage={handleSendMessage}
