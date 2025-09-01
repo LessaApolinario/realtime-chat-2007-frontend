@@ -59,9 +59,14 @@ export function useChatRoom({ roomId, token }: ChatRoomHookProps) {
     emitEvent("message", { roomId, text });
   }
 
+  function handleStartTyping(isTyping: boolean) {
+    emitEvent("typing", { roomId, isTyping });
+  }
+
   return {
     formattedMessages,
     handleSendMessage,
+    handleStartTyping,
     participants,
   };
 }

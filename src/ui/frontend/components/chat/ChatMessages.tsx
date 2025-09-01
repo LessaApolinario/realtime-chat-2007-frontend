@@ -2,21 +2,30 @@
 
 import type { ChatMessage } from "@/@types/ChatMessage";
 import { SendHorizonal } from "lucide-react";
-import { useRef, type KeyboardEvent } from "react";
+import { useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { ChatMessageCard } from "./ChatMessageCard";
+import { TypingIndicator } from "./TypingIndicator";
 
 interface ChatMessageProps {
   messages: ChatMessage[];
   onSendMessage: (text: string) => void | Promise<void>;
+  onStartTyping: (isTyping: boolean) => void | Promise<void>;
 }
 
-export function ChatMessages({ messages, onSendMessage }: ChatMessageProps) {
+export function ChatMessages({
+  messages,
+  onSendMessage,
+  onStartTyping,
+}: ChatMessageProps) {
   const textRef = useRef<HTMLInputElement>(null);
+  const [isTyping, setIsTyping] = useState(false);
 
   function handleSendMessage() {
     if (textRef.current && textRef.current.value.length) {
       onSendMessage(textRef.current.value);
       textRef.current.value = "";
+      setIsTyping(false);
+      onStartTyping(false);
     }
   }
 
@@ -24,6 +33,12 @@ export function ChatMessages({ messages, onSendMessage }: ChatMessageProps) {
     if (event.key === "Enter") {
       handleSendMessage();
     }
+  }
+
+  function handleStartTyping(event: ChangeEvent<HTMLInputElement>) {
+    const typing = event.target.value.length > 0;
+    setIsTyping(typing);
+    onStartTyping(typing);
   }
 
   return (
@@ -40,11 +55,14 @@ export function ChatMessages({ messages, onSendMessage }: ChatMessageProps) {
         )}
       </div>
 
+      {isTyping && <TypingIndicator />}
+
       <div className="flex h-[4.5rem] w-full items-center justify-center gap-2 p-2">
         <input
           ref={textRef}
           type="text"
           placeholder="Mensagem"
+          onChange={handleStartTyping}
           onKeyDown={handleSendMessageOnPressEnter}
           className="flex-1 rounded-md border border-cyan-500 bg-zinc-800 p-3 text-cyan-400 placeholder:text-zinc-500 focus:border-cyan-400 focus:outline-none"
         />

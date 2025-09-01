@@ -12,7 +12,12 @@ export default function ChatRoomPage() {
   const params = useParams<{ id: string }>();
   const { data: session } = useSession();
   const { token } = useUserToken({ user: session?.user });
-  const { formattedMessages, handleSendMessage, participants } = useChatRoom({
+  const {
+    formattedMessages,
+    handleSendMessage,
+    handleStartTyping,
+    participants,
+  } = useChatRoom({
     roomId: params.id,
     token,
   });
@@ -29,6 +34,7 @@ export default function ChatRoomPage() {
         <ChatMessages
           messages={formattedMessages}
           onSendMessage={handleSendMessage}
+          onStartTyping={handleStartTyping}
         />
         <ParticipantsSidebar participants={participants} />
       </section>
