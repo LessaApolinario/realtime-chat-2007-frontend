@@ -30,7 +30,7 @@ export function ChatMessages({ messages, onSendMessage }: ChatMessageProps) {
   return (
     <section className="flex h-full flex-col rounded-xl bg-zinc-800">
       {messages.length ? (
-        <div className="h-[calc(100%_-_6.5rem)] w-full overflow-y-scroll rounded-xl bg-zinc-700 p-4 text-white">
+        <div className="h-[calc(100%_-_4.5rem)] w-full overflow-y-scroll rounded-xl bg-zinc-700 p-4 text-white">
           <div className="flex flex-col space-y-3">
             {messages.map((message) => (
               <ChatMessageCard message={message} key={message.id} />
