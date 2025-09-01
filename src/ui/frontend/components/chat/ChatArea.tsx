@@ -16,20 +16,11 @@ export function ChatArea() {
   const { socket: chatRoomWebSocket, createWebSocketConnection } = useSocket(
     process.env.NEXT_PUBLIC_REALTIME_CHAT_WEB_SOCKET_URL,
   );
-  const { token, updateUserToken } = useUserToken();
+  const { token } = useUserToken({ user: session?.user });
   const router = useRouter();
   const [rooms, setChatRooms] = useState<ChatRoom[]>([]);
   const [isCreateChatRoomModalVisible, setIsCreateChatRoomModalVisible] =
     useState(false);
-
-  useEffect(() => {
-    if (session?.user) {
-      updateUserToken({
-        name: session.user.name ?? "",
-        email: session.user.email ?? "",
-      });
-    }
-  }, [session]);
 
   useEffect(() => {
     if (token) {
