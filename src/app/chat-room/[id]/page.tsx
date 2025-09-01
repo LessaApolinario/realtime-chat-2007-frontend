@@ -3,6 +3,7 @@
 import { ChatMessages } from "@/ui/frontend/components/chat/ChatMessages";
 import { ParticipantsSidebar } from "@/ui/frontend/components/chat/ParticipantsSidebar";
 import { useChatRoom } from "@/ui/frontend/hooks/useChatRoom";
+import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
 import { useUserToken } from "@/ui/frontend/hooks/useUserToken";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
@@ -15,6 +16,7 @@ export default function ChatRoomPage() {
     roomId: params.id,
     token,
   });
+  useDocumentTitle(`Sala de chat - ${params.id}`);
 
   return (
     <main className="h-[calc(100vh_-_5rem)] bg-zinc-900 p-16 text-cyan-400">
