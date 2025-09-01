@@ -3,12 +3,17 @@
 import { ChatMessages } from "@/ui/frontend/components/chat/ChatMessages";
 import { ParticipantsSidebar } from "@/ui/frontend/components/chat/ParticipantsSidebar";
 import { useChatRoom } from "@/ui/frontend/hooks/useChatRoom";
+import { useUserToken } from "@/ui/frontend/hooks/useUserToken";
+import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 
 export default function ChatRoomPage() {
   const params = useParams<{ id: string }>();
+  const { data: session } = useSession();
+  const { token } = useUserToken({ user: session?.user });
   const { formattedMessages, handleSendMessage, participants } = useChatRoom({
     roomId: params.id,
+    token,
   });
 
   return (

@@ -1,9 +1,26 @@
 import type { CreateUserSignedTokenRequest } from "@/@types/http/request/auth";
 import type { CreateUserSignedTokenResponse } from "@/@types/http/response/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export function useUserToken() {
+interface UserTokenHookProps {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+}
+
+export function useUserToken({ user }: UserTokenHookProps) {
   const [token, setToken] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      updateUserToken({
+        name: user.name ?? "",
+        email: user.email ?? "",
+      });
+    }
+  }, [user]);
 
   async function updateUserToken(payload: CreateUserSignedTokenRequest) {
     const response = await fetch("/api/auth/token", {
@@ -22,6 +39,5 @@ export function useUserToken() {
 
   return {
     token,
-    updateUserToken,
   };
 }

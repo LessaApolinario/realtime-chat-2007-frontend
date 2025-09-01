@@ -1,33 +1,20 @@
-import { useSession } from "next-auth/react";
-import { useUserToken } from "./useUserToken";
-import { useSocket } from "./useSocket";
-import { useEffect, useMemo, useState } from "react";
 import type { ChatMessage } from "@/@types/ChatMessage";
 import type { Participant } from "@/@types/Participant";
+import { useEffect, useMemo, useState } from "react";
+import { useSocket } from "./useSocket";
 
 interface ChatRoomHookProps {
   roomId: string;
+  token: string;
 }
 
-export function useChatRoom({ roomId }: ChatRoomHookProps) {
+export function useChatRoom({ roomId, token }: ChatRoomHookProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [participants, setParticipants] = useState<Participant[]>([]);
 
-  const { token, updateUserToken } = useUserToken();
   const { createWebSocketConnection, emitEvent, onEvent, socket } = useSocket(
     process.env.NEXT_PUBLIC_REALTIME_CHAT_WEB_SOCKET_URL,
   );
-
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    if (session?.user) {
-      updateUserToken({
-        name: session.user.name ?? "",
-        email: session.user.email ?? "",
-      });
-    }
-  }, [session]);
 
   useEffect(() => {
     if (token) {
