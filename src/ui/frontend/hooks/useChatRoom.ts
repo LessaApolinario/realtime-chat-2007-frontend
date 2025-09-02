@@ -11,6 +11,7 @@ interface ChatRoomHookProps {
 export function useChatRoom({ roomId, token }: ChatRoomHookProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [typingUsers, setTypingUsers] = useState<Participant[]>([]);
 
   const { createWebSocketConnection, emitEvent, onEvent, socket } = useSocket(
     process.env.NEXT_PUBLIC_REALTIME_CHAT_WEB_SOCKET_URL,
@@ -41,6 +42,19 @@ export function useChatRoom({ roomId, token }: ChatRoomHookProps) {
       setMessages((previousMessages) => [...previousMessages, message]);
     });
 
+    onEvent("typing", ({ user }: { user: Participant }) => {
+      setTypingUsers((prev) => {
+        if (!prev.find((u) => u.id === user.id)) {
+          return [...prev, user];
+        }
+        return prev;
+      });
+    });
+
+    onEvent("stopTyping", ({ user }: { user: Participant }) => {
+      setTypingUsers((prev) => prev.filter((u) => u.id !== user?.id));
+    });
+
     return () => {
       emitEvent("leaveChatRoom", { roomId });
     };
@@ -59,14 +73,20 @@ export function useChatRoom({ roomId, token }: ChatRoomHookProps) {
     emitEvent("message", { roomId, text });
   }
 
-  function handleStartTyping(isTyping: boolean) {
-    emitEvent("typing", { roomId, isTyping });
+  function handleStartTyping() {
+    emitEvent("typing", { roomId });
+  }
+
+  function handleStopTyping() {
+    emitEvent("stopTyping", { roomId });
   }
 
   return {
     formattedMessages,
     handleSendMessage,
     handleStartTyping,
+    handleStopTyping,
     participants,
+    typingUsers,
   };
 }

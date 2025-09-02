@@ -1,31 +1,34 @@
 "use client";
 
 import type { ChatMessage } from "@/@types/ChatMessage";
+import type { Participant } from "@/@types/Participant";
 import { SendHorizonal } from "lucide-react";
-import { useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
+import { useRef, type ChangeEvent, type KeyboardEvent } from "react";
 import { ChatMessageCard } from "./ChatMessageCard";
 import { TypingIndicator } from "./TypingIndicator";
 
 interface ChatMessageProps {
   messages: ChatMessage[];
+  typingUsers: Participant[];
   onSendMessage: (text: string) => void | Promise<void>;
-  onStartTyping: (isTyping: boolean) => void | Promise<void>;
+  onStartTyping: () => void | Promise<void>;
+  onStopTyping: () => void | Promise<void>;
 }
 
 export function ChatMessages({
   messages,
+  typingUsers,
   onSendMessage,
   onStartTyping,
+  onStopTyping,
 }: ChatMessageProps) {
   const textRef = useRef<HTMLInputElement>(null);
-  const [isTyping, setIsTyping] = useState(false);
 
   function handleSendMessage() {
     if (textRef.current && textRef.current.value.length) {
       onSendMessage(textRef.current.value);
       textRef.current.value = "";
-      setIsTyping(false);
-      onStartTyping(false);
+      onStopTyping();
     }
   }
 
@@ -37,8 +40,11 @@ export function ChatMessages({
 
   function handleStartTyping(event: ChangeEvent<HTMLInputElement>) {
     const typing = event.target.value.length > 0;
-    setIsTyping(typing);
-    onStartTyping(typing);
+    if (typing) {
+      onStartTyping();
+    } else {
+      onStopTyping();
+    }
   }
 
   return (
@@ -55,7 +61,7 @@ export function ChatMessages({
         )}
       </div>
 
-      {isTyping && <TypingIndicator />}
+      {typingUsers.length ? <TypingIndicator /> : null}
 
       <div className="flex h-[4.5rem] w-full items-center justify-center gap-2 p-2">
         <input

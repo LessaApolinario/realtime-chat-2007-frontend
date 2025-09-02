@@ -16,7 +16,9 @@ export default function ChatRoomPage() {
     formattedMessages,
     handleSendMessage,
     handleStartTyping,
+    handleStopTyping,
     participants,
+    typingUsers,
   } = useChatRoom({
     roomId: params.id,
     token,
@@ -32,9 +34,11 @@ export default function ChatRoomPage() {
 
       <section className="grid h-[calc(100%_-_1.75rem)] min-h-0 w-full grid-cols-[2fr_1fr] gap-8">
         <ChatMessages
+          typingUsers={typingUsers}
           messages={formattedMessages}
-          onSendMessage={handleSendMessage}
+          onStopTyping={handleStopTyping}
           onStartTyping={handleStartTyping}
+          onSendMessage={handleSendMessage}
         />
         <ParticipantsSidebar participants={participants} />
       </section>

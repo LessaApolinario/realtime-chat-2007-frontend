@@ -17,7 +17,7 @@ export function NavigationBar() {
     <header className="flex w-full items-center justify-between bg-zinc-800 p-4">
       <h2 className="text-cyan-600">Olá, {session?.user?.name}</h2>
 
-      <nav>Links</nav>
+      <nav></nav>
 
       <button
         type="button"
