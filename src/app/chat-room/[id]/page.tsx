@@ -1,16 +1,24 @@
 "use client";
 
+import { PageLoading } from "@/ui/frontend/components/base/PageLoading";
+import { Spinner } from "@/ui/frontend/components/base/Spinner";
 import { ChatMessages } from "@/ui/frontend/components/chat/ChatMessages";
 import { ParticipantsSidebar } from "@/ui/frontend/components/chat/ParticipantsSidebar";
 import { useChatRoom } from "@/ui/frontend/hooks/useChatRoom";
 import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
 import { useUserToken } from "@/ui/frontend/hooks/useUserToken";
 import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function ChatRoomPage() {
+  const router = useRouter();
   const params = useParams<{ id: string }>();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/login");
+    },
+  });
   const { token } = useUserToken({ user: session?.user });
   const {
     formattedMessages,
@@ -24,6 +32,18 @@ export default function ChatRoomPage() {
     token,
   });
   useDocumentTitle(`Sala de chat - ${params.id}`);
+
+  if (status === "loading") {
+    return (
+      <PageLoading>
+        <Spinner className="h-20 w-20 border-6 border-cyan-600" />
+      </PageLoading>
+    );
+  }
+
+  if (status !== "authenticated") {
+    return <p>Você não está logado</p>;
+  }
 
   return (
     <main className="h-[calc(100vh_-_5rem)] bg-zinc-900 p-16 text-cyan-400">
