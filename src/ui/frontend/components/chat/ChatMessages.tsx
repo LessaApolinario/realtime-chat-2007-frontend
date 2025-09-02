@@ -61,7 +61,7 @@ export function ChatMessages({
         )}
       </div>
 
-      {typingUsers.length ? <TypingIndicator /> : null}
+      {typingUsers.length ? <TypingIndicator users={typingUsers} /> : null}
 
       <div className="flex h-[4.5rem] w-full items-center justify-center gap-2 p-2">
         <input
