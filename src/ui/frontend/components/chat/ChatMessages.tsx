@@ -49,7 +49,7 @@ export function ChatMessages({
 
   return (
     <section className="flex min-h-0 flex-col rounded-xl bg-zinc-800">
-      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto rounded-xl bg-zinc-700 p-4 text-white">
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto rounded-tl-xl rounded-tr-xl bg-zinc-800 p-4 text-white">
         {messages.length ? (
           messages.map((message) => (
             <ChatMessageCard message={message} key={message.id} />
@@ -63,7 +63,7 @@ export function ChatMessages({
 
       {typingUsers.length ? <TypingIndicator users={typingUsers} /> : null}
 
-      <div className="flex h-[4.5rem] w-full items-center justify-center gap-2 p-2">
+      <div className="flex h-[4.5rem] w-full items-center justify-center gap-2 rounded-br-xl rounded-bl-xl bg-zinc-800 p-2">
         <input
           ref={textRef}
           type="text"
