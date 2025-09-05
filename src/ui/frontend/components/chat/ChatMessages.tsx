@@ -3,7 +3,7 @@
 import type { ChatMessage } from "@/@types/ChatMessage";
 import type { Participant } from "@/@types/Participant";
 import { SendHorizonal } from "lucide-react";
-import { useRef, type ChangeEvent, type KeyboardEvent } from "react";
+import { useEffect, useRef, type ChangeEvent, type KeyboardEvent } from "react";
 import { ChatMessageCard } from "./ChatMessageCard";
 import { TypingIndicator } from "./TypingIndicator";
 
@@ -23,6 +23,13 @@ export function ChatMessages({
   onStopTyping,
 }: ChatMessageProps) {
   const textRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   function handleSendMessage() {
     if (textRef.current && textRef.current.value.length) {
@@ -59,6 +66,7 @@ export function ChatMessages({
             Sem mensagens nesta sala
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       {typingUsers.length ? <TypingIndicator users={typingUsers} /> : null}
