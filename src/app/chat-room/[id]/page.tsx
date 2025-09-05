@@ -46,13 +46,13 @@ export default function ChatRoomPage() {
   }
 
   return (
-    <main className="h-[calc(100vh_-_5rem)] bg-zinc-900 p-16 text-cyan-400">
-      <h1 className="text-xl">
+    <main className="flex h-[calc(100vh-5rem)] flex-col bg-zinc-900 p-4 text-cyan-400">
+      <h1 className="mb-4 text-xl">
         <strong>Chat da sala:</strong>{" "}
         <span className="font-normal text-zinc-300">{params.id}</span>
       </h1>
 
-      <section className="grid h-[calc(100%_-_1.75rem)] min-h-0 w-full grid-cols-[2fr_1fr] gap-8">
+      <section className="grid min-h-0 w-full flex-1 grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
         <ChatMessages
           typingUsers={typingUsers}
           messages={formattedMessages}
