@@ -1,10 +1,9 @@
 "use client";
 
-import type { FetchChartRoomsResponse } from "@/@types/http/response/auth";
-import type { ChatRoom } from "@/core/domain/models/ChatRoom";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useChatRoomAPI } from "../../hooks/useChatRoomAPI";
 import { useSocket } from "../../hooks/useSocket";
 import { useUserToken } from "../../hooks/useUserToken";
 import { Modal } from "../base/Modal";
@@ -18,7 +17,7 @@ export function ChatArea() {
   );
   const { token } = useUserToken({ user: session?.user });
   const router = useRouter();
-  const [rooms, setChatRooms] = useState<ChatRoom[]>([]);
+  const { rooms, fetchChatRooms, createChatRoom } = useChatRoomAPI();
   const [isCreateChatRoomModalVisible, setIsCreateChatRoomModalVisible] =
     useState(false);
 
@@ -33,18 +32,6 @@ export function ChatArea() {
   }, [token]);
 
   useEffect(() => {
-    async function fetchChatRooms() {
-      try {
-        const response = await fetch("/api/chat/list");
-        if (response.ok) {
-          const data: FetchChartRoomsResponse = await response.json();
-          setChatRooms(data.chatRooms);
-        }
-      } catch (error) {
-        console.error("Error fetching chat rooms: ", error);
-      }
-    }
-
     fetchChatRooms();
   }, []);
 
@@ -90,7 +77,10 @@ export function ChatArea() {
           isOpen={isCreateChatRoomModalVisible}
           onClose={handleCloseCreateChatRoomModal}
         >
-          <CreateChatRoomForm onClose={handleCloseCreateChatRoomModal} />
+          <CreateChatRoomForm
+            onCreateChatRoom={createChatRoom}
+            onClose={handleCloseCreateChatRoomModal}
+          />
         </Modal>
       )}
     </section>

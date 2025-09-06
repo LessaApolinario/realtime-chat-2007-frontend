@@ -10,9 +10,15 @@ import { InlineBannerMessage } from "../base/InlineBannerMessage";
 
 interface CreateChatRoomFormProps {
   onClose: () => void;
+  onCreateChatRoom: (
+    chatRoom: CreateChatRoomRequest,
+  ) => Promise<CreateChatRoomResponse>;
 }
 
-export function CreateChatRoomForm({ onClose }: CreateChatRoomFormProps) {
+export function CreateChatRoomForm({
+  onClose,
+  onCreateChatRoom,
+}: CreateChatRoomFormProps) {
   const [error, setError] = useState<string>("");
   const [name, setName] = useState("");
   const [permission, setPermission] = useState<ChatPermission>(
@@ -41,18 +47,10 @@ export function CreateChatRoomForm({ onClose }: CreateChatRoomFormProps) {
         payload.password = password;
       }
 
-      const res = await fetch("/api/chat/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const data = await onCreateChatRoom(payload);
 
-      const data: CreateChatRoomResponse = await res.json();
-
-      if (!res.ok) {
-        setError(data?.error?.message || "Erro ao criar a sala.");
+      if (data.error) {
+        setError(data.error.message ?? "Erro ao criar a sala.");
         return;
       }
 
