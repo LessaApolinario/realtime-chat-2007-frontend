@@ -58,12 +58,12 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="grid min-h-screen grid-cols-1 bg-zinc-900 text-zinc-200 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
-      <div className="flex items-center justify-center">
+    <main className="grid min-h-screen grid-cols-1 bg-zinc-900 text-zinc-200 lg:grid-cols-2">
+      <div className="flex items-center justify-center p-4">
         <form
           onSubmit={handleSubmit}
           autoComplete="off"
-          className="flex w-md flex-col gap-4 rounded-xl bg-zinc-800 p-8 shadow-lg"
+          className="flex w-full max-w-md flex-col gap-4 rounded-xl bg-zinc-800 p-8 shadow-lg"
         >
           <h2 className="mb-4 text-center text-3xl font-semibold text-cyan-400">
             Criar conta
@@ -149,7 +149,7 @@ export default function RegisterPage() {
         </form>
       </div>
 
-      <div className="hidden items-center justify-center bg-cyan-900/20 sm:hidden md:flex lg:flex xl:flex 2xl:flex">
+      <div className="hidden items-center justify-center bg-cyan-900/20 lg:flex">
         <h3 className="text-4xl font-bold text-cyan-200">Bem-vindo!</h3>
       </div>
     </main>
