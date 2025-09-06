@@ -57,6 +57,7 @@ export function useChatRoom({ roomId, token }: ChatRoomHookProps) {
 
     return () => {
       emitEvent("leaveChatRoom", { roomId });
+      socket.disconnect();
     };
   }, [socket]);
 
