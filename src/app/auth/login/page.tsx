@@ -62,6 +62,7 @@ export default function LoginPage() {
       <div className="flex items-center justify-center">
         <form
           onSubmit={handleSubmit}
+          autoComplete="off"
           className="flex w-md flex-col gap-4 rounded-xl bg-zinc-800 p-8 shadow-lg"
         >
           <h2 className="mb-4 text-center text-3xl font-semibold text-cyan-400">
