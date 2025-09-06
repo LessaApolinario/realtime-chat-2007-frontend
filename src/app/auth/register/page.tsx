@@ -58,7 +58,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="grid min-h-screen grid-cols-2 bg-zinc-900 text-zinc-200">
+    <main className="grid min-h-screen grid-cols-1 bg-zinc-900 text-zinc-200 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
       <div className="flex items-center justify-center">
         <form
           onSubmit={handleSubmit}
@@ -148,7 +148,7 @@ export default function RegisterPage() {
         </form>
       </div>
 
-      <div className="flex items-center justify-center bg-cyan-900/20">
+      <div className="hidden items-center justify-center bg-cyan-900/20 sm:hidden md:flex lg:flex xl:flex 2xl:flex">
         <h3 className="text-4xl font-bold text-cyan-200">Bem-vindo!</h3>
       </div>
     </main>
