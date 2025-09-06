@@ -9,6 +9,10 @@ export interface CreateChatRoomResponse {
   error: Error;
 }
 
+export interface FetchChartRoomByIdResponse {
+  chatRoom: ChatRoom;
+}
+
 export interface CreateUserSignedTokenResponse {
   token: string;
 }

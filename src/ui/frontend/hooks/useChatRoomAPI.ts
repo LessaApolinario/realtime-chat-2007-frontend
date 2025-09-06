@@ -1,12 +1,14 @@
 import type { CreateChatRoomRequest } from "@/@types/http/request/auth";
 import type {
   CreateChatRoomResponse,
+  FetchChartRoomByIdResponse,
   FetchChartRoomsResponse,
 } from "@/@types/http/response/auth";
 import type { ChatRoom } from "@/core/domain/models/ChatRoom";
 import { useState } from "react";
 
 export function useChatRoomAPI() {
+  const [chatRoom, setChatRoom] = useState<ChatRoom>();
   const [rooms, setChatRooms] = useState<ChatRoom[]>([]);
 
   async function fetchChatRooms() {
@@ -33,9 +35,19 @@ export function useChatRoomAPI() {
     return data;
   }
 
+  async function fetchChatRoomByID(roomId: string) {
+    const response = await fetch(`/api/chat/${roomId}`, {
+      method: "GET",
+    });
+    const foundChatRoom: FetchChartRoomByIdResponse = await response.json();
+    setChatRoom(foundChatRoom.chatRoom);
+  }
+
   return {
     rooms,
+    chatRoom,
     fetchChatRooms,
     createChatRoom,
+    fetchChatRoomByID,
   };
 }

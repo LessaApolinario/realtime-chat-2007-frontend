@@ -5,10 +5,12 @@ import { Spinner } from "@/ui/frontend/components/base/Spinner";
 import { ChatMessages } from "@/ui/frontend/components/chat/ChatMessages";
 import { ParticipantsSidebar } from "@/ui/frontend/components/chat/ParticipantsSidebar";
 import { useChatRoom } from "@/ui/frontend/hooks/useChatRoom";
+import { useChatRoomAPI } from "@/ui/frontend/hooks/useChatRoomAPI";
 import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
 import { useUserToken } from "@/ui/frontend/hooks/useUserToken";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ChatRoomPage() {
   const router = useRouter();
@@ -31,7 +33,12 @@ export default function ChatRoomPage() {
     roomId: params.id,
     token,
   });
-  useDocumentTitle(`Sala de chat - ${params.id}`);
+  const { chatRoom, fetchChatRoomByID } = useChatRoomAPI();
+  useDocumentTitle(`Bem-vindo a ${chatRoom?.name ?? ""}`);
+
+  useEffect(() => {
+    fetchChatRoomByID(params.id);
+  }, []);
 
   if (status === "loading") {
     return (
@@ -48,8 +55,7 @@ export default function ChatRoomPage() {
   return (
     <main className="flex h-[calc(100vh-5rem)] flex-col bg-zinc-900 p-4 text-cyan-400">
       <h1 className="mb-4 text-xl">
-        <strong>Chat da sala:</strong>{" "}
-        <span className="font-normal text-zinc-300">{params.id}</span>
+        <span className="font-normal text-zinc-300">{chatRoom?.name}</span>
       </h1>
 
       <section className="grid min-h-0 w-full flex-1 grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
