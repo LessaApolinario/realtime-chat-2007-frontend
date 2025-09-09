@@ -1,35 +1,17 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useChatRoomAPI } from "../../hooks/useChatRoomAPI";
-import { useSocket } from "../../hooks/useSocket";
-import { useUserToken } from "../../hooks/useUserToken";
 import { Modal } from "../base/Modal";
 import { ChatRoomCard } from "./ChatRoomCard";
 import { CreateChatRoomForm } from "./CreateChatRoomForm";
 
 export function ChatArea() {
-  const { data: session } = useSession();
-  const { socket: chatRoomWebSocket, createWebSocketConnection } = useSocket(
-    process.env.NEXT_PUBLIC_REALTIME_CHAT_WEB_SOCKET_URL,
-  );
-  const { token } = useUserToken({ user: session?.user });
   const router = useRouter();
   const { rooms, fetchChatRooms, createChatRoom } = useChatRoomAPI();
   const [isCreateChatRoomModalVisible, setIsCreateChatRoomModalVisible] =
     useState(false);
-
-  useEffect(() => {
-    if (token) {
-      createWebSocketConnection(token);
-    }
-
-    return () => {
-      chatRoomWebSocket?.disconnect();
-    };
-  }, [token]);
 
   useEffect(() => {
     fetchChatRooms();
