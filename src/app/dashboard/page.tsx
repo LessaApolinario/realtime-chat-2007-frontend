@@ -3,11 +3,11 @@
 import { PageLoading } from "@/ui/frontend/components/base/PageLoading";
 import { Spinner } from "@/ui/frontend/components/base/Spinner";
 import { ChatArea } from "@/ui/frontend/components/chat/ChatArea";
+import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
-  const router = useRouter();
+  useDocumentTitle("Dashboard");
   const { status } = useSession();
 
   if (status === "loading") {
