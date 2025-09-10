@@ -33,21 +33,23 @@ export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
     const socket = io(endpoint, { auth: { token } });
     socketRef.current = socket;
 
-    socket.on("connect", () => {
-      setSocketId(socket.id);
-      socket.emit("joinChatRoom", { roomId });
-      socket.emit("roomParticipants", { roomId });
+    socketRef.current?.on("connect", () => {
+      setSocketId(socketRef.current?.id);
+      socketRef.current?.emit("joinChatRoom", { roomId });
+      socketRef.current?.emit("roomParticipants", { roomId });
     });
 
-    socket.on("disconnect", () => {
+    socketRef.current?.on("disconnect", () => {
       setSocketId(undefined);
+      socketRef.current?.emit("leaveChatRoom", { roomId });
+      socketRef.current?.emit("roomParticipants", { roomId });
     });
 
-    socket.on("message", (message: ChatMessage) => {
+    socketRef.current?.on("message", (message: ChatMessage) => {
       setMessages((previousMessages) => [...previousMessages, message]);
     });
 
-    socket.on("typing", ({ user }: UserTypingPayload) => {
+    socketRef.current?.on("typing", ({ user }: UserTypingPayload) => {
       setTypingUsers((previousUsers) => {
         const wasUserFound = previousUsers.find((previousUser) => {
           return previousUser.id === user.id;
@@ -60,7 +62,7 @@ export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
       });
     });
 
-    socket.on("stopTyping", ({ user }: UserTypingPayload) => {
+    socketRef.current?.on("stopTyping", ({ user }: UserTypingPayload) => {
       setTypingUsers((previousUsers) =>
         previousUsers.filter((previousUser) => {
           return previousUser.id !== user.id;
@@ -68,12 +70,15 @@ export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
       );
     });
 
-    socket.on("roomParticipants", (roomParticipants: Participant[]) => {
-      setParticipants(roomParticipants);
-    });
+    socketRef.current?.on(
+      "roomParticipants",
+      (roomParticipants: Participant[]) => {
+        setParticipants(roomParticipants);
+      },
+    );
 
     return () => {
-      socket.disconnect();
+      socketRef.current?.disconnect();
       socketRef.current = null;
     };
   }, [roomId, token, url]);
