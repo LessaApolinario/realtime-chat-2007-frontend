@@ -58,22 +58,15 @@ After running the above commands, open [http://localhost:3000](http://localhost:
 
 ## 🛠 Technologies Used
 
-- **Frontend:** Next.js, React  
-- **Backend:** Node.js, Socket.IO  
-- **Database:** PostgreSQL, Prisma  
-- **Others:** Docker Compose  
+- **Frontend:** [Next.js](https://nextjs.org/docs), [React](https://reactjs.org/docs/getting-started.html)  
+- **Backend:** [Node.js](https://nodejs.org/en/docs/), [Socket.IO](https://socket.io/docs/v4/)  
+- **Database:** [PostgreSQL](https://www.postgresql.org/docs/), [Prisma](https://www.prisma.io/docs/)  
+- **Others:** [Docker Compose](https://docs.docker.com/compose/)
 
 ---
 
 ## 🔮 Roadmap / Next Steps
 
-- [ ] JWT authentication with refresh tokens  
 - [ ] Real-time notifications  
 - [ ] Image uploads in chat  
-- [ ] Deploy to production (Vercel + Railway/Docker)  
-
----
-
-## 📜 License
-
-This project is licensed under the **MIT License**. See `LICENSE` for more details.
+- [ ] Production deployment – still figuring out the best approach  
