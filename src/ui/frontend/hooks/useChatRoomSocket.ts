@@ -44,7 +44,7 @@ export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
     });
 
     socket.on("message", (message: ChatMessage) => {
-      setMessages((prev) => [...prev, message]);
+      setMessages((previousMessages) => [...previousMessages, message]);
     });
 
     socket.on("typing", ({ user }: UserTypingPayload) => {
