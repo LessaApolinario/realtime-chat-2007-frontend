@@ -11,6 +11,8 @@ interface ChatRoomHookProps {
 
 type FormattedMessage = ChatMessage & { sentByMe: boolean };
 
+type UserTypingPayload = { user: Participant };
+
 export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [typingUsers, setTypingUsers] = useState<Participant[]>([]);
@@ -31,55 +33,48 @@ export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
     const socket = io(endpoint, { auth: { token } });
     socketRef.current = socket;
 
-    function onConnect() {
+    socket.on("connect", () => {
       setSocketId(socket.id);
       socket.emit("joinChatRoom", { roomId });
       socket.emit("roomParticipants", { roomId });
-    }
+    });
 
-    function onMessage(message: ChatMessage) {
+    socket.on("disconnect", () => {
+      setSocketId(undefined);
+    });
+
+    socket.on("message", (message: ChatMessage) => {
       setMessages((prev) => [...prev, message]);
-    }
+    });
 
-    function onTyping({ user }: { user: Participant }) {
-      setTypingUsers((prev) => {
-        if (prev.find((u) => u.id === user.id)) return prev;
-        return [...prev, user];
+    socket.on("typing", ({ user }: UserTypingPayload) => {
+      setTypingUsers((previousUsers) => {
+        const wasUserFound = previousUsers.find((previousUser) => {
+          return previousUser.id === user.id;
+        });
+        if (wasUserFound) {
+          return previousUsers;
+        }
+
+        return [...previousUsers, user];
       });
-    }
+    });
 
-    function onStopTyping({ user }: { user: Participant }) {
-      setTypingUsers((prev) => prev.filter((u) => u.id !== user.id));
-    }
+    socket.on("stopTyping", ({ user }: UserTypingPayload) => {
+      setTypingUsers((previousUsers) =>
+        previousUsers.filter((previousUser) => {
+          return previousUser.id !== user.id;
+        }),
+      );
+    });
 
-    function onRoomParticipants(roomParticipants: Participant[]) {
+    socket.on("roomParticipants", (roomParticipants: Participant[]) => {
       setParticipants(roomParticipants);
-    }
-
-    socket.on("connect", onConnect);
-    socket.on("message", onMessage);
-    socket.on("typing", onTyping);
-    socket.on("stopTyping", onStopTyping);
-    socket.on("roomParticipants", onRoomParticipants);
+    });
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("message", onMessage);
-      socket.off("typing", onTyping);
-      socket.off("stopTyping", onStopTyping);
-      socket.off("roomParticipants", onRoomParticipants);
-
-      try {
-        if (socket && socket.connected) {
-          socket.emit("leaveChatRoom", { roomId });
-        }
-      } catch (error) {
-        console.error("Error leaving chat room: ", error);
-      }
-
       socket.disconnect();
       socketRef.current = null;
-      setSocketId(undefined);
     };
   }, [roomId, token, url]);
 
