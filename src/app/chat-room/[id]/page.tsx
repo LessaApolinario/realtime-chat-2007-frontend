@@ -9,11 +9,10 @@ import { useChatRoomSocket } from "@/ui/frontend/hooks/useChatRoomSocket";
 import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
 import { useUserToken } from "@/ui/frontend/hooks/useUserToken";
 import { useSession } from "next-auth/react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ChatRoomPage() {
-  const router = useRouter();
   const params = useParams<{ id: string }>();
   const { data: session, status } = useSession();
   const { token } = useUserToken({ user: session?.user });
