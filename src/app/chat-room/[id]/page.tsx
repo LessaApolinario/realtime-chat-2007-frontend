@@ -4,8 +4,8 @@ import { PageLoading } from "@/ui/frontend/components/base/PageLoading";
 import { Spinner } from "@/ui/frontend/components/base/Spinner";
 import { ChatMessages } from "@/ui/frontend/components/chat/ChatMessages";
 import { ParticipantsSidebar } from "@/ui/frontend/components/chat/ParticipantsSidebar";
-import { useChatRoom } from "@/ui/frontend/hooks/useChatRoom";
 import { useChatRoomAPI } from "@/ui/frontend/hooks/useChatRoomAPI";
+import { useChatRoomSocket } from "@/ui/frontend/hooks/useChatRoomSocket";
 import { useDocumentTitle } from "@/ui/frontend/hooks/useDocumentTitle";
 import { useUserToken } from "@/ui/frontend/hooks/useUserToken";
 import { useSession } from "next-auth/react";
@@ -27,9 +27,10 @@ export default function ChatRoomPage() {
     handleSendMessage,
     handleStartTyping,
     handleStopTyping,
+    handleLeaveChatRoom,
     participants,
     typingUsers,
-  } = useChatRoom({
+  } = useChatRoomSocket({
     roomId: params.id,
     token,
   });
@@ -38,6 +39,10 @@ export default function ChatRoomPage() {
 
   useEffect(() => {
     fetchChatRoomByID(params.id);
+
+    return () => {
+      handleLeaveChatRoom();
+    };
   }, []);
 
   if (status === "loading") {
