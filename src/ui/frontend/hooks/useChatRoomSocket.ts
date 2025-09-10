@@ -41,8 +41,6 @@ export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
 
     socketRef.current?.on("disconnect", () => {
       setSocketId(undefined);
-      socketRef.current?.emit("leaveChatRoom", { roomId });
-      socketRef.current?.emit("roomParticipants", { roomId });
     });
 
     socketRef.current?.on("message", (message: ChatMessage) => {
@@ -78,8 +76,11 @@ export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
     );
 
     return () => {
-      socketRef.current?.disconnect();
-      socketRef.current = null;
+      if (socketRef.current) {
+        socketRef.current.emit("leaveChatRoom", { roomId });
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
     };
   }, [roomId, token, url]);
 
@@ -108,7 +109,11 @@ export function useChatRoomSocket({ roomId, token, url }: ChatRoomHookProps) {
   }, [roomId]);
 
   const handleLeaveChatRoom = useCallback(() => {
-    socketRef.current?.emit("leaveChatRoom", { roomId });
+    if (socketRef.current) {
+      socketRef.current.emit("leaveChatRoom", { roomId });
+      socketRef.current.disconnect();
+      socketRef.current = null;
+    }
   }, [roomId]);
 
   return {

@@ -27,7 +27,6 @@ export default function ChatRoomPage() {
     handleSendMessage,
     handleStartTyping,
     handleStopTyping,
-    handleLeaveChatRoom,
     participants,
     typingUsers,
   } = useChatRoomSocket({
@@ -39,11 +38,7 @@ export default function ChatRoomPage() {
 
   useEffect(() => {
     fetchChatRoomByID(params.id);
-
-    return () => {
-      handleLeaveChatRoom();
-    };
-  }, []);
+  }, [params.id]);
 
   if (status === "loading") {
     return (
