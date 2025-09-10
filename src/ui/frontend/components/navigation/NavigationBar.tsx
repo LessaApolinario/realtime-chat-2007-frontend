@@ -13,6 +13,13 @@ export function NavigationBar() {
     return <></>;
   }
 
+  function handleLogout() {
+    signOut({
+      redirect: true,
+      callbackUrl: "/auth/login",
+    });
+  }
+
   return (
     <header className="flex w-full items-center justify-between bg-zinc-800 p-4">
       <h2 className="text-cyan-600">Olá, {session?.user?.name}</h2>
@@ -21,7 +28,7 @@ export function NavigationBar() {
 
       <button
         type="button"
-        onClick={() => signOut()}
+        onClick={handleLogout}
         className="w-40 cursor-pointer rounded-md bg-cyan-600 py-3 font-medium text-zinc-200 transition-colors hover:bg-cyan-500"
       >
         Sair

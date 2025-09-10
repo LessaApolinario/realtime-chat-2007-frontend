@@ -15,12 +15,7 @@ import { useEffect } from "react";
 export default function ChatRoomPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/auth/login");
-    },
-  });
+  const { data: session, status } = useSession();
   const { token } = useUserToken({ user: session?.user });
   const {
     formattedMessages,
